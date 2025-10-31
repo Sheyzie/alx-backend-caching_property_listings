@@ -7,12 +7,13 @@ from django.views.decorators.cache import cache_page
 
 from .models import Property
 from .serializers import PropertySerializer
+from .utils import get_all_properties
 
 @api_view(['GET'])
 @cache_page(60 * 15)  # cache for 15 minutes
 def property_list(request):
-    properties = Property.objects.all()
-    serializer = PropertySerializer(properties, many=True)
+    queryset = get_all_properties()
+    serializer = PropertySerializer(queryset, many=True)
     data = serializer.data
 
     return JsonResponse({'data': data})
